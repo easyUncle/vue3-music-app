@@ -40,9 +40,9 @@
   },
   "lint-staged": {
     "src/**/*.{js,ts,vue}": [
-      "eslint --fix",
       "git add .",
-      "prettier --write"
+      "prettier --write",
+      "eslint  --fix"
     ]
   },
   "config": {
