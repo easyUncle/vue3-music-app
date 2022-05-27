@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     saySomething() {
-      return '12312';
+      return '1';
     }
   }
 };
