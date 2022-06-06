@@ -1,5 +1,5 @@
 <template>
-  <div class="recommend" v-loading="loading">
+  <div class="recommend" v-loading:[title]="loading">
     <scroll class="recommend-scroll">
       <div>
         <div class="slider-wrapper">
@@ -40,7 +40,8 @@ export default {
   data() {
     return {
       sliders: [],
-      albums: []
+      albums: [],
+      title: 'loading...'
     };
   },
   computed: {
@@ -58,11 +59,11 @@ export default {
 
 <style lang="scss" scoped>
 .recommend {
-  position: fixed;
+  position: absolute;
   width: 100%;
   top: 88px;
   bottom: 0;
-  overflow: scroll;
+  overflow: hidden;
   .recommend-scroll {
     height: 100%;
     overflow: hidden;

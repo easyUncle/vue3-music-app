@@ -12,6 +12,11 @@ export default {
     return {
       title: '正在加载...'
     };
+  },
+  methods: {
+    setTitle(title) {
+      this.title = title;
+    }
   }
 };
 </script>
