@@ -1,0 +1,23 @@
+{
+    "projectType":"配置项目类型，目前支持类型 react|vue|",
+    "projectName":"项目名称",
+    "pages":[
+        {
+            "name":"index",
+            "html":"./public/index.html",
+            "entry":"./src/main.js"
+        }
+    ],
+    "development":{
+        "openPage":"index.html",
+        "host":"0.0.0.0",
+        "port":"5000",
+        "proxy":{
+        },
+        "historyApiFallback":{
+        }
+    },
+    "dependencies":{
+        "lib1":"粘贴原项目package.json里dependencies内容"
+    }
+}

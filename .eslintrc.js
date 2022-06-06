@@ -1,12 +1,14 @@
 module.exports = {
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    node:true
   },
   extends: ['eslint:recommended', 'plugin:vue/essential', 'prettier'],
   parserOptions: {
     ecmaVersion: 10,
-    sourceType: 'module'
+    sourceType: 'module',
+    parser:'babel-eslint'
   },
   plugins: ['vue'],
   rules: {
