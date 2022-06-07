@@ -19,9 +19,10 @@ export default {
       default: 0
     }
   },
-  setup(props) {
+  emits: ['scroll'],
+  setup(props, { emit }) {
     let rootRef = ref(null);
-    const scroll = initScroll(rootRef, props);
+    const scroll = initScroll(rootRef, props, emit);
     return {
       rootRef,
       scroll

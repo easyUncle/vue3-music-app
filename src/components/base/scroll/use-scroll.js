@@ -2,17 +2,23 @@ import BScroll from '@better-scroll/core';
 import ObserveDOM from '@better-scroll/observe-dom';
 import { onMounted, onUnmounted, ref } from 'vue';
 BScroll.use(ObserveDOM);
-export function initScroll(rootRef, options) {
+export function initScroll(rootRef, options, emit) {
   let scroll = ref(null);
   onMounted(() => {
-    scroll.value = new BScroll(rootRef.value, {
+    const scrollVal = (scroll.value = new BScroll(rootRef.value, {
       observeDOM: true,
       ...options
-    });
+    }));
+    if (options.probeType > 0) {
+      scrollVal.on('scroll', position => {
+        emit('scroll', position);
+      });
+    }
   });
   onUnmounted(() => {
     scroll.value.destroy();
   });
+
   return {
     scroll
   };
