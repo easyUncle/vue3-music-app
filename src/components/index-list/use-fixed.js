@@ -36,6 +36,7 @@ export function useFixed(props) {
   });
   const fixedStyle = computed(() => {
     const distanceVal = distance.value;
+    //当distance大于固定标题高度的时候,标题不用移动
     const diff =
       distanceVal > 0 && distanceVal < TITLE_HEIGHT
         ? distanceVal - TITLE_HEIGHT
