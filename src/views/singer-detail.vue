@@ -1,6 +1,11 @@
 <template>
   <div class="singer-detail">
-    <music-list :pic="pic" :title="title" :songs="songs"></music-list>
+    <music-list
+      :pic="pic"
+      :title="title"
+      :songs="songs"
+      :loading="loading"
+    ></music-list>
   </div>
 </template>
 
@@ -22,7 +27,8 @@ export default {
   data() {
     return {
       songs: [],
-      selectSinger: null
+      selectSinger: null,
+      loading: true
     };
   },
   computed: {
@@ -59,6 +65,7 @@ export default {
     const id = this.$route.params.id;
     const result = await getSingerDetail(id);
     this.songs = await processSongs(result.songs);
+    this.loading = false;
   }
 };
 </script>

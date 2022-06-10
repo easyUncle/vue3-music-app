@@ -6,6 +6,7 @@ import store from './store';
 import '@/assets/scss/index.scss';
 import LazyPlugin from 'vue3-lazy';
 import loadingDirective from '@/components/base/loading/directive';
+import NoResultDirective from '@/components/base/no-result/directive';
 
 createApp(App)
   .use(store)
@@ -14,4 +15,5 @@ createApp(App)
     loading: require('@/assets/images/music.png')
   })
   .directive('loading', loadingDirective)
+  .directive('no-result', NoResultDirective)
   .mount('#app');

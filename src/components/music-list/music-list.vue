@@ -14,7 +14,8 @@
       <div class="filter" :style="filterStyle"></div>
     </div>
     <scroll
-      v-loading="!songs.length"
+      v-loading="loading"
+      v-no-result:[noResultTitle]="noResult"
       class="list"
       :style="scrollStyle"
       :probe-type="3"
@@ -43,13 +44,15 @@ export default {
     },
     pic: {
       type: String
-    }
+    },
+    loading: Boolean
   },
   data() {
     return {
       scrollY: 0,
       bgImageHeight: 0,
-      maxListTranslateY: 0
+      maxListTranslateY: 0,
+      noResultTitle: '抱歉,该歌手暂无数据'
     };
   },
   components: {
@@ -103,6 +106,9 @@ export default {
       return {
         top: `${this.bgImageHeight}px`
       };
+    },
+    noResult() {
+      return !this.loading && !this.songs.length;
     }
   },
   methods: {

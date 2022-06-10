@@ -2,10 +2,14 @@ import { createApp } from 'vue';
 import { addClass, removeClass } from './dom';
 const POS_RELATIVE = 'pos-relative';
 export function createLoadingDirective(comp) {
+  const name = comp.name;
   return {
     mounted(el, binding) {
       const instance = createApp(comp).mount(document.createElement('div'));
-      el.instance = instance;
+      if (!el[name]) {
+        el[name] = {};
+      }
+      el[name].instance = instance;
       let title = binding.arg;
       if (typeof title != 'undefined') {
         instance.setTitle(title);
@@ -27,10 +31,10 @@ export function createLoadingDirective(comp) {
     if (!posAttr.includes(pos)) {
       addClass(el, POS_RELATIVE);
     }
-    el.appendChild(el.instance.$el);
+    el.appendChild(el[name].instance.$el);
   }
   function remove(el) {
     removeClass(el, POS_RELATIVE);
-    el.removeChild(el.instance.$el);
+    el.removeChild(el[name].instance.$el);
   }
 }
