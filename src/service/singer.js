@@ -4,8 +4,8 @@ export function getSingerList() {
   return get('/api/getSingerList');
 }
 
-export function getSingerDetail(singer) {
+export function getSingerDetail(mid) {
   return get('/api/getSingerDetail', {
-    mid: singer.mid
+    mid
   });
 }
