@@ -22,7 +22,7 @@
       @scroll="scrollEvent"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs" @selectSong="selectSong"></song-list>
       </div>
     </scroll>
   </div>
@@ -31,6 +31,7 @@
 <script>
 import SongList from '../base/song-list/song-list.vue';
 import Scroll from '../base/scroll/scroll.vue';
+import { mapActions } from 'vuex';
 const TITLE_HEIGHT = 40;
 export default {
   name: 'music-list',
@@ -117,7 +118,14 @@ export default {
     },
     handleBack() {
       this.$router.go(-1);
-    }
+    },
+    selectSong({ index }) {
+      this.selectPlay({
+        list: this.songs,
+        index
+      });
+    },
+    ...mapActions(['selectPlay'])
   },
   async mounted() {
     this.bgImageHeight = this.$refs.bgImage.clientHeight;
