@@ -5,7 +5,7 @@
     </div>
     <h1 class="title">{{ title }}</h1>
     <div class="bg-image" :style="bgImageStyle" ref="bgImage">
-      <div class="play-btn-wrapper" :style="playStyle">
+      <div class="play-btn-wrapper" :style="playStyle" @click="random">
         <div class="play-btn">
           <i class="icon-play"></i>
           <span class="text">随机播放全部</span>
@@ -125,7 +125,10 @@ export default {
         index
       });
     },
-    ...mapActions(['selectPlay'])
+    random() {
+      this.randomPlay(this.songs);
+    },
+    ...mapActions(['selectPlay', 'randomPlay'])
   },
   async mounted() {
     this.bgImageHeight = this.$refs.bgImage.clientHeight;
