@@ -4,7 +4,6 @@ export function knuthShuffle(list) {
   console.log(arr.length);
   for (let i = arr.length - 1; i > 0; i--) {
     let j = getRandom(i);
-    alert(j);
     swap(arr, i, j);
   }
   return arr;

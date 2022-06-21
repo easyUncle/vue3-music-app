@@ -16,8 +16,8 @@ const mutations = {
     state.playMode = mode;
   },
   //设置全屏状态
-  setFullScreen(state, fullscreen) {
-    state.fullscreen = fullscreen;
+  setFullScreen(state, fullScreen) {
+    state.fullScreen = fullScreen;
   },
   //设置播放歌曲索引
   setCurrentIndex(state, index) {
