@@ -50,16 +50,13 @@
           <span class="dot"></span>
         </div>
         <div class="progress-wrapper">
-          <span class="time time-l"></span>
+          <span class="time time-l">{{ formateTime(currentTime) }}</span>
           <div class="progress-bar-wrapper">
-            <!-- <progress-bar
-                ref="barRef"
-                :progress="progress"
-                @progress-changing="onProgressChanging"
-                @progress-changed="onProgressChanged"
-              ></progress-bar> -->
+            <progress-bar :progress="progress"></progress-bar>
           </div>
-          <span class="time time-r"></span>
+          <span class="time time-r">{{
+            formateTime(currentSong.duration)
+          }}</span>
         </div>
         <div class="operators">
           <div class="icon i-left" :class="disableCls">
@@ -90,6 +87,7 @@
       @canplay="canplay"
       @error="error"
       @ended="end"
+      @timeupdate="updateTime"
     ></audio>
   </div>
 </template>
@@ -100,9 +98,14 @@ import { computed, ref, watch } from 'vue';
 import { useMode } from './use-mode';
 import { PLAY_MODE } from '../../assets/js/constants';
 import { useFavorite } from './use-favorite';
+import ProgressBar from './progress-bar.vue';
+import { formateTime } from '@/assets/js/util';
 
 export default {
   name: 'player',
+  components: {
+    ProgressBar
+  },
   setup() {
     const audioRef = ref(null);
     //vuex
@@ -115,6 +118,7 @@ export default {
     const playMode = computed(() => store.state.playMode);
     //data
     let songReady = ref(false);
+    let currentTime = ref(0);
     //hooks
     const { modeIcon, changeMode } = useMode();
     const { toggleFavorite, favoriteICon } = useFavorite();
@@ -122,7 +126,12 @@ export default {
     const playIcon = computed(() =>
       playing.value ? 'icon-pause' : 'icon-play'
     );
+    //icon样式控制
     const disableCls = computed(() => (songReady.value ? '' : 'disable'));
+    //播放进度条监控
+    const progress = computed(
+      () => currentTime.value / currentSong.value.duration
+    );
     //监听当前歌曲,全换播放url和播放状态
     watch(currentSong, newSong => {
       const audioVal = audioRef.value;
@@ -205,6 +214,9 @@ export default {
         next();
       }
     }
+    function updateTime(e) {
+      currentTime.value = e.target.currentTime;
+    }
     return {
       audioRef,
       currentSong,
@@ -225,7 +237,13 @@ export default {
       end,
       //favorite
       toggleFavorite,
-      favoriteICon
+      favoriteICon,
+      //进度条
+      progress,
+      updateTime,
+      currentTime,
+      //时间格式化
+      formateTime
     };
   }
 };

@@ -15,3 +15,10 @@ function getRandom(max) {
 function swap(arr, i, j) {
   [arr[i], arr[j]] = [arr[j], arr[i]];
 }
+
+export function formateTime(time) {
+  // | 0向下取整
+  const minute = (((time / 60) | 0) + '').padStart(2, '0');
+  const second = ((time % 60 | 0) + '').padStart(2, '0');
+  return `${minute}:${second}`;
+}
