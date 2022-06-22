@@ -1,7 +1,9 @@
-import { PLAY_MODE } from '@/assets/js/constants';
+import { PLAY_MODE, MODE_KEY } from '@/assets/js/constants';
 import { knuthShuffle } from '../assets/js/util';
+import storage from 'good-storage';
+
 export function selectPlay({ commit }, { list, index }) {
-  commit('setPlayMode', PLAY_MODE.sequence);
+  commit('setPlayMode', storage.get(MODE_KEY) || PLAY_MODE.sequence);
   commit('setSequenceList', list);
   commit('setPlaying', true);
   commit('setFullScreen', true);
@@ -28,4 +30,5 @@ export function changeMode({ commit, state, getters }, mode) {
   const index = state.playList.findIndex(item => item.id === currentSong.id);
   commit('setCurrentIndex', index);
   commit('setPlayMode', mode);
+  storage.set(MODE_KEY, mode);
 }

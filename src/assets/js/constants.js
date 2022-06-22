@@ -10,3 +10,5 @@ export const PLAY_MODE = {
 };
 
 export const FAVORITE_KEY = '__favorite__';
+
+export const MODE_KEY = '__mode__';
