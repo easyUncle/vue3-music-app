@@ -63,7 +63,7 @@
         </div>
         <div class="operators">
           <div class="icon i-left" :class="disableCls">
-            <i class="icon-sequence"></i>
+            <i :class="modeIcon" @click="changeMode"></i>
           </div>
           <div class="icon i-left" :class="disableCls">
             <i class="icon-prev" @click="prev"></i>
@@ -75,7 +75,11 @@
             <i class="icon-next" @click="next"></i>
           </div>
           <div class="icon i-right" :class="disableCls">
-            <i class="icon-not-favorite"></i>
+            <i
+              class="icon-not-favorite"
+              @click="toggleFavorite(currentSong)"
+              :class="favoriteICon(currentSong)"
+            ></i>
           </div>
         </div>
       </div>
@@ -85,6 +89,7 @@
       @pause="pause"
       @canplay="canplay"
       @error="error"
+      @ended="end"
     ></audio>
   </div>
 </template>
@@ -92,24 +97,27 @@
 <script>
 import { useStore } from 'vuex';
 import { computed, ref, watch } from 'vue';
+import { useMode } from './use-mode';
+import { PLAY_MODE } from '../../assets/js/constants';
+import { useFavorite } from './use-favorite';
 
 export default {
   name: 'player',
   setup() {
     const audioRef = ref(null);
-
+    //vuex
     const store = useStore();
     const currentSong = computed(() => store.getters.currentSong);
     const playList = computed(() => store.state.playList);
     const fullScreen = computed(() => store.state.fullScreen);
     const playing = computed(() => store.state.playing);
     const currentIndex = computed(() => store.state.currentIndex);
-
+    const playMode = computed(() => store.state.playMode);
+    //data
     let songReady = ref(false);
-
-    function togglePlay() {
-      store.commit('setPlaying', !playing.value);
-    }
+    //hooks
+    const { modeIcon, changeMode } = useMode();
+    const { toggleFavorite, favoriteICon } = useFavorite();
     //播放状态派生播放按钮
     const playIcon = computed(() =>
       playing.value ? 'icon-pause' : 'icon-play'
@@ -179,6 +187,9 @@ export default {
       audioVal.play();
       store.commit('setPlaying', true);
     }
+    function togglePlay() {
+      store.commit('setPlaying', !playing.value);
+    }
     //当浏览器可以开始播放音频/视频时触发
     function canplay() {
       if (songReady.value) return;
@@ -186,6 +197,13 @@ export default {
     }
     function error() {
       songReady.value = true;
+    }
+    function end() {
+      if (playMode.value === PLAY_MODE.loop) {
+        loop();
+      } else {
+        next();
+      }
     }
     return {
       audioRef,
@@ -200,7 +218,14 @@ export default {
       next,
       canplay,
       disableCls,
-      error
+      error,
+      //mode
+      modeIcon,
+      changeMode,
+      end,
+      //favorite
+      toggleFavorite,
+      favoriteICon
     };
   }
 };

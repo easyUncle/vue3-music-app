@@ -22,6 +22,10 @@ const mutations = {
   //设置播放歌曲索引
   setCurrentIndex(state, index) {
     state.currentIndex = index;
+  },
+  //设置喜爱列表
+  setFavoriteList(state, list) {
+    state.favoriteList = list;
   }
 };
 

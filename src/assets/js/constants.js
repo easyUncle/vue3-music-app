@@ -8,3 +8,5 @@ export const PLAY_MODE = {
   //随机播放
   random: 2
 };
+
+export const FAVORITE_KEY = '__favorite__';

@@ -17,3 +17,15 @@ export function randomPlay({ commit }, list) {
   commit('setPlayList', knuthShuffle(list));
   commit('setCurrentIndex', 0);
 }
+
+export function changeMode({ commit, state, getters }, mode) {
+  const currentSong = getters.currentSong;
+  if (mode === PLAY_MODE.random) {
+    commit('setPlayList', knuthShuffle(state.sequenceList));
+  } else {
+    commit('setPlayList', state.sequenceList);
+  }
+  const index = state.playList.findIndex(item => item.id === currentSong.id);
+  commit('setCurrentIndex', index);
+  commit('setPlayMode', mode);
+}
