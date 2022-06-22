@@ -84,6 +84,7 @@
     <audio
       ref="audioRef"
       @pause="pause"
+      @play="play"
       @canplay="canplay"
       @error="error"
       @ended="end"
@@ -154,6 +155,9 @@ export default {
     }
     function pause() {
       store.commit('setPlaying', false);
+    }
+    function play() {
+      store.commit('setPlaying', true);
     }
     function prev() {
       if (!songReady.value) {
@@ -226,6 +230,7 @@ export default {
       goBack,
       togglePlay,
       pause,
+      play,
       prev,
       next,
       canplay,
