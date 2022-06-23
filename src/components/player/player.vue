@@ -15,7 +15,12 @@
         <div class="middle-l">
           <div ref="cdWrapperRef" class="cd-wrapper">
             <div ref="cdRef" class="cd">
-              <img ref="cdImageRef" class="image" :src="currentSong.pic" />
+              <img
+                ref="cdImageRef"
+                class="image"
+                :src="currentSong.pic"
+                :class="cdCls"
+              />
             </div>
           </div>
           <div class="playing-lyric-wrapper">
@@ -105,6 +110,7 @@ import { PLAY_MODE } from '../../assets/js/constants';
 import { useFavorite } from './use-favorite';
 import ProgressBar from './progress-bar.vue';
 import { formateTime } from '@/assets/js/util';
+import { useCd } from './use-cd';
 
 export default {
   name: 'player',
@@ -125,9 +131,12 @@ export default {
     //data
     let songReady = ref(false);
     let currentTime = ref(0);
+
     //hooks
     const { modeIcon, changeMode } = useMode();
     const { toggleFavorite, favoriteICon } = useFavorite();
+    const { cdCls, cdImageRef, cdRef } = useCd();
+
     //播放状态派生播放按钮
     const playIcon = computed(() =>
       playing.value ? 'icon-pause' : 'icon-play'
@@ -270,7 +279,11 @@ export default {
       onProgressChanging,
       onProgressChanged,
       //时间格式化
-      formateTime
+      formateTime,
+      //cd
+      cdCls,
+      cdImageRef,
+      cdRef
     };
   }
 };
