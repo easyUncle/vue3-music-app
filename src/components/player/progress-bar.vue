@@ -1,8 +1,14 @@
 <template>
-  <div class="progress-bar">
+  <div class="progress-bar" @click="onProgressClick">
     <div class="bar-inner">
-      <div class="progress" :style="progressStyle"></div>
-      <div class="progress-btn-wrapper" :style="progressBtnStyle">
+      <div class="progress" :style="progressStyle" ref="progress"></div>
+      <div
+        class="progress-btn-wrapper"
+        :style="progressBtnStyle"
+        @touchstart.prevent="onTouchstart"
+        @touchmove.prevent="onTouchmove"
+        @touchend.prevent="onTouchend"
+      >
         <div class="progress-btn"></div>
       </div>
     </div>
@@ -41,6 +47,39 @@ export default {
     progress(newProgress) {
       const barWidth = this.$el.clientWidth - PROGRESS_BTN_WIDTH;
       this.offset = barWidth * newProgress;
+    }
+  },
+  created() {
+    this.touch = {};
+  },
+  methods: {
+    onTouchstart(e) {
+      this.touch.beginWidth = this.$refs.progress.clientWidth;
+      this.touch.x1 = e.touches[0].pageX;
+    },
+    onTouchmove(e) {
+      const x2 = e.touches[0].pageX;
+      const detal = x2 - this.touch.x1;
+      const barWidth = this.$el.clientWidth - PROGRESS_BTN_WIDTH;
+      const progress = Math.min(
+        1,
+        Math.max((this.touch.beginWidth + detal) / barWidth, 0)
+      );
+      this.offset = barWidth * progress;
+      this.$emit('progress-changing', progress);
+    },
+    onTouchend() {
+      const barWidth = this.$el.clientWidth - PROGRESS_BTN_WIDTH;
+      const progress = this.$refs.progress.clientWidth / barWidth;
+      this.$emit('progress-changed', progress);
+    },
+    onProgressClick(e) {
+      console.log(e.pageX);
+      const rect = this.$el.getBoundingClientRect();
+      const barWidth = this.$el.clientWidth - PROGRESS_BTN_WIDTH;
+      const offset = e.pageX - rect.left;
+      const progress = Math.min(1, Math.max(0, offset / barWidth));
+      this.$emit('progress-changed', progress);
     }
   }
 };

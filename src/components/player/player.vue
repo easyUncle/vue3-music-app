@@ -52,7 +52,11 @@
         <div class="progress-wrapper">
           <span class="time time-l">{{ formateTime(currentTime) }}</span>
           <div class="progress-bar-wrapper">
-            <progress-bar :progress="progress"></progress-bar>
+            <progress-bar
+              :progress="progress"
+              @progress-changing="onProgressChanging"
+              @progress-changed="onProgressChanged"
+            ></progress-bar>
           </div>
           <span class="time time-r">{{
             formateTime(currentSong.duration)
@@ -109,6 +113,7 @@ export default {
   },
   setup() {
     const audioRef = ref(null);
+    let onChanging = false;
     //vuex
     const store = useStore();
     const currentSong = computed(() => store.getters.currentSong);
@@ -138,6 +143,7 @@ export default {
       const audioVal = audioRef.value;
       songReady.value = false;
       audioVal.src = newSong.url;
+      currentTime.value = 0;
       audioVal.play();
       store.commit('setPlaying', true);
     });
@@ -219,7 +225,21 @@ export default {
       }
     }
     function updateTime(e) {
-      currentTime.value = e.target.currentTime;
+      if (!onChanging) {
+        currentTime.value = e.target.currentTime;
+      }
+    }
+    function onProgressChanging(progress) {
+      onChanging = true;
+      currentTime.value = progress * currentSong.value.duration;
+    }
+    function onProgressChanged(progress) {
+      onChanging = false;
+      audioRef.value.currentTime = currentTime.value =
+        progress * currentSong.value.duration;
+      if (!playing.value) {
+        store.commit('setPlaying', true);
+      }
     }
     return {
       audioRef,
@@ -247,6 +267,8 @@ export default {
       progress,
       updateTime,
       currentTime,
+      onProgressChanging,
+      onProgressChanged,
       //时间格式化
       formateTime
     };
