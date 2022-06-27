@@ -12,7 +12,7 @@
         <h2 class="subtitle">{{ currentSong.singer }}</h2>
       </div>
       <div class="middle">
-        <div class="middle-l">
+        <div class="middle-l" style="display: none">
           <div ref="cdWrapperRef" class="cd-wrapper">
             <div ref="cdRef" class="cd">
               <img
@@ -24,30 +24,26 @@
             </div>
           </div>
           <div class="playing-lyric-wrapper">
-            <div class="playing-lyric"></div>
+            <div class="playing-lyric">{{ playingLyric }}</div>
           </div>
         </div>
-        <!-- <scroll
-            class="middle-r"
-            ref="lyricScrollRef"
-            :style="middleRStyle"
-          >
-            <div class="lyric-wrapper">
-              <div v-if="currentLyric" ref="lyricListRef">
-                <p
-                  class="text"
-                  :class="{'current': currentLineNum ===index}"
-                  v-for="(line,index) in currentLyric.lines"
-                  :key="line.num"
-                >
-                  {{line.txt}}
-                </p>
-              </div>
-              <div class="pure-music" v-show="pureMusicLyric">
-                <p>{{pureMusicLyric}}</p>
-              </div>
+        <scroll class="middle-r" ref="lyricScrollRef">
+          <div class="lyric-wrapper">
+            <div v-if="currentLyric" ref="lyricListRef">
+              <p
+                class="text"
+                :class="{ current: currentLineNum === index }"
+                v-for="(line, index) in currentLyric.lines"
+                :key="line.num"
+              >
+                {{ line.txt }}
+              </p>
             </div>
-          </scroll> -->
+            <!-- <div class="pure-music" v-show="pureMusicLyric">
+                <p>{{pureMusicLyric}}</p>
+              </div> -->
+          </div>
+        </scroll>
       </div>
       <div class="bottom">
         <div class="dot-wrapper">
@@ -111,11 +107,14 @@ import { useFavorite } from './use-favorite';
 import ProgressBar from './progress-bar.vue';
 import { formateTime } from '@/assets/js/util';
 import { useCd } from './use-cd';
+import { useLyric } from './use-lyric';
+import Scroll from '@/components/base/scroll/scroll';
 
 export default {
   name: 'player',
   components: {
-    ProgressBar
+    ProgressBar,
+    Scroll
   },
   setup() {
     const audioRef = ref(null);
@@ -136,6 +135,14 @@ export default {
     const { modeIcon, changeMode } = useMode();
     const { toggleFavorite, favoriteICon } = useFavorite();
     const { cdCls, cdImageRef, cdRef } = useCd();
+    const {
+      currentLyric,
+      currentLineNum,
+      playLyric,
+      lyricScrollRef,
+      lyricListRef,
+      playingLyric
+    } = useLyric({ songReady, currentTime });
 
     //播放状态派生播放按钮
     const playIcon = computed(() =>
@@ -161,6 +168,7 @@ export default {
       const audioVal = audioRef.value;
       if (newState) {
         audioVal.play();
+        playLyric();
       } else {
         audioVal.pause();
       }
@@ -212,6 +220,7 @@ export default {
     function loop() {
       const audioVal = audioRef.value;
       audioVal.currentTime = 0;
+      currentTime.value = 0;
       audioVal.play();
       store.commit('setPlaying', true);
     }
@@ -222,6 +231,7 @@ export default {
     function canplay() {
       if (songReady.value) return;
       songReady.value = true;
+      playLyric();
     }
     function error() {
       songReady.value = true;
@@ -241,6 +251,7 @@ export default {
     function onProgressChanging(progress) {
       onChanging = true;
       currentTime.value = progress * currentSong.value.duration;
+      playLyric();
     }
     function onProgressChanged(progress) {
       onChanging = false;
@@ -249,6 +260,7 @@ export default {
       if (!playing.value) {
         store.commit('setPlaying', true);
       }
+      playLyric();
     }
     return {
       audioRef,
@@ -283,7 +295,13 @@ export default {
       //cd
       cdCls,
       cdImageRef,
-      cdRef
+      cdRef,
+      //lyric
+      currentLyric,
+      currentLineNum,
+      lyricScrollRef,
+      lyricListRef,
+      playingLyric
     };
   }
 };

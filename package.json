@@ -16,6 +16,7 @@
     "axios": "^0.27.2",
     "core-js": "^3.6.5",
     "good-storage": "^1.1.1",
+    "lyric-parser": "^1.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-lazy": "^1.0.0-alpha.1",
@@ -44,10 +45,11 @@
     "husky": "^8.0.1",
     "js-base64": "^3.7.2",
     "lint-staged": "^12.4.2",
+    "lyric-parser": "^1.0.1",
     "node-sass": "^5.0.0",
-    "sass-loader": "^10.1.0",
     "pinyin": "^2.11.2",
     "prettier": "^2.6.2",
+    "sass-loader": "^10.1.0",
     "vue3-lazy": "^1.0.0-alpha.1"
   },
   "lint-staged": {

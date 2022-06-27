@@ -17,7 +17,7 @@ function swap(arr, i, j) {
 }
 
 export function formateTime(time) {
-  // | 0向下取整
+  // | 0向下取整;padStart
   const minute = (((time / 60) | 0) + '').padStart(2, '0');
   const second = ((time % 60 | 0) + '').padStart(2, '0');
   return `${minute}:${second}`;
