@@ -57,6 +57,7 @@ export function useLyric({ songReady, currentTime }) {
     playLyric,
     lyricScrollRef,
     lyricListRef,
-    playingLyric
+    playingLyric,
+    stopLyric
   };
 }

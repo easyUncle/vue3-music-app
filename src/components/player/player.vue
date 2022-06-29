@@ -11,8 +11,13 @@
         <h1 class="title">{{ currentSong.name }}</h1>
         <h2 class="subtitle">{{ currentSong.singer }}</h2>
       </div>
-      <div class="middle">
-        <div class="middle-l" style="display: none">
+      <div
+        class="middle"
+        @touchstart.prevent="onTouchstart"
+        @touchend.prevent="onTouchend"
+        @touchmove.prevent="onTouchmove"
+      >
+        <div class="middle-l" :style="middleLstyle">
           <div ref="cdWrapperRef" class="cd-wrapper">
             <div ref="cdRef" class="cd">
               <img
@@ -27,7 +32,7 @@
             <div class="playing-lyric">{{ playingLyric }}</div>
           </div>
         </div>
-        <scroll class="middle-r" ref="lyricScrollRef">
+        <scroll class="middle-r" ref="lyricScrollRef" :style="middleRstyle">
           <div class="lyric-wrapper">
             <div v-if="currentLyric" ref="lyricListRef">
               <p
@@ -47,8 +52,8 @@
       </div>
       <div class="bottom">
         <div class="dot-wrapper">
-          <span class="dot"></span>
-          <span class="dot"></span>
+          <span class="dot" :class="{ active: currentView == 'cd' }"></span>
+          <span class="dot" :class="{ active: currentView == 'lyric' }"></span>
         </div>
         <div class="progress-wrapper">
           <span class="time time-l">{{ formateTime(currentTime) }}</span>
@@ -109,6 +114,7 @@ import { formateTime } from '@/assets/js/util';
 import { useCd } from './use-cd';
 import { useLyric } from './use-lyric';
 import Scroll from '@/components/base/scroll/scroll';
+import { useMiddleInterative } from './use-middle-interative';
 
 export default {
   name: 'player',
@@ -141,9 +147,17 @@ export default {
       playLyric,
       lyricScrollRef,
       lyricListRef,
-      playingLyric
+      playingLyric,
+      stopLyric
     } = useLyric({ songReady, currentTime });
-
+    const {
+      onTouchstart,
+      onTouchmove,
+      onTouchend,
+      currentView,
+      middleLstyle,
+      middleRstyle
+    } = useMiddleInterative();
     //播放状态派生播放按钮
     const playIcon = computed(() =>
       playing.value ? 'icon-pause' : 'icon-play'
@@ -171,6 +185,7 @@ export default {
         playLyric();
       } else {
         audioVal.pause();
+        stopLyric();
       }
     });
     function goBack() {
@@ -301,7 +316,14 @@ export default {
       currentLineNum,
       lyricScrollRef,
       lyricListRef,
-      playingLyric
+      playingLyric,
+      //middleInterative
+      onTouchstart,
+      onTouchmove,
+      onTouchend,
+      currentView,
+      middleLstyle,
+      middleRstyle
     };
   }
 };
