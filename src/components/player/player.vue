@@ -100,6 +100,7 @@
       @ended="end"
       @timeupdate="updateTime"
     ></audio>
+    <mini-player :progress="progress"></mini-player>
   </div>
 </template>
 
@@ -115,12 +116,14 @@ import { useCd } from './use-cd';
 import { useLyric } from './use-lyric';
 import Scroll from '@/components/base/scroll/scroll';
 import { useMiddleInterative } from './use-middle-interative';
+import MiniPlayer from './mini-player.vue';
 
 export default {
   name: 'player',
   components: {
     ProgressBar,
-    Scroll
+    Scroll,
+    MiniPlayer
   },
   setup() {
     const audioRef = ref(null);
@@ -165,8 +168,8 @@ export default {
     //icon样式控制
     const disableCls = computed(() => (songReady.value ? '' : 'disable'));
     //播放进度条监控
-    const progress = computed(
-      () => currentTime.value / currentSong.value.duration
+    const progress = computed(() =>
+      currentTime.value ? currentTime.value / currentSong.value.duration : 0
     );
     //监听当前歌曲,全换播放url和播放状态
     watch(currentSong, newSong => {
