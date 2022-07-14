@@ -27,16 +27,17 @@
     <div class="control" @click.stop="showPlaylist">
       <i class="icon-playlist"></i>
     </div>
-    <!-- <playlist ref="playlistRef"></playlist> -->
+    <playlist ref="playlistRef"></playlist>
   </div>
 </template>
 
 <script>
 import { useStore } from 'vuex';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import ProgressCircle from './progress-circle.vue';
 import { useCd } from './use-cd';
 import useMiniSlider from './use-mini-slider';
+import Playlist from './playlist.vue';
 export default {
   name: 'mini-player',
   props: {
@@ -46,9 +47,11 @@ export default {
     }
   },
   components: {
-    ProgressCircle
+    ProgressCircle,
+    Playlist
   },
   setup() {
+    const playlistRef = ref(null);
     const store = useStore();
     //vuex
     const currentSong = computed(() => store.getters.currentSong);
@@ -69,6 +72,9 @@ export default {
     function togglePlay() {
       store.commit('setPlaying', !playing.value);
     }
+    function showPlaylist() {
+      playlistRef.value.show();
+    }
     return {
       currentSong,
       fullScreen,
@@ -79,7 +85,9 @@ export default {
       cdImageRef,
       cdRef,
       playList,
-      sliderWrapperRef
+      sliderWrapperRef,
+      showPlaylist,
+      playlistRef
     };
   }
 };

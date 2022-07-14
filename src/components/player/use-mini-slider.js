@@ -40,6 +40,11 @@ export default function useMiniSlider() {
         slideVal.goToPage(currentIndex.value, 0, 0);
       }
     });
+    watch(currentIndex, newIndex => {
+      if (slideVal && showSlide.value) {
+        slideVal.goToPage(newIndex, 0, 0);
+      }
+    });
   });
   onUnmounted(() => {
     slide.value.destroy();

@@ -15,12 +15,21 @@ export function useMode() {
       ? 'icon-loop'
       : 'icon-random';
   });
+  const modeText = computed(() => {
+    const playModeVal = playMode.value;
+    return playModeVal === PLAY_MODE.sequence
+      ? '顺序播放'
+      : playModeVal === PLAY_MODE.loop
+      ? '单曲循环'
+      : '随机播放';
+  });
   const changeMode = function () {
     let mode = (playMode.value + 1) % 3;
     store.dispatch('changeMode', mode);
   };
   return {
     modeIcon,
-    changeMode
+    changeMode,
+    modeText
   };
 }

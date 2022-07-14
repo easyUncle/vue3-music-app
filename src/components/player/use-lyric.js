@@ -41,7 +41,6 @@ export function useLyric({ songReady, currentTime }) {
       const lineEl = lyricListRefVal.children[lineNum - 5];
       scrollComp.scroll.scrollToElement(lineEl, 1000);
     } else {
-      console.log(lineNum);
       scrollComp.scroll.scrollTo(0, 0, 1000);
     }
   }
