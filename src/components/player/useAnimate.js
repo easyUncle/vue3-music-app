@@ -3,7 +3,13 @@ import animations from 'create-keyframe-animation';
 
 export function useAnimate() {
   const cdWrapperRef = ref(null);
+  let entering = false;
+  let leaving = false;
   function enter(el, done) {
+    entering = true;
+    if (leaving) {
+      afterLeave();
+    }
     const { x, y, scale } = calculatePosScale();
     const cdWrapperRefVal = cdWrapperRef.value;
     const animation = {
@@ -25,16 +31,20 @@ export function useAnimate() {
     animations.runAnimation(cdWrapperRefVal, 'move', done);
   }
   function afterEnter() {
+    entering = false;
     animations.unregisterAnimation('move');
     cdWrapperRef.value.style.animation = '';
   }
   function leave(el, done) {
+    leaving = true;
+    if (entering) {
+      afterEnter();
+    }
     const { x, y, scale } = calculatePosScale();
     console.log(x, y, scale);
     const cdWrapperRefVal = cdWrapperRef.value;
 
-    cdWrapperRefVal.style.transition =
-      'all 0.6s cubic-bezier(0.45, 0, 0.55, 1)';
+    cdWrapperRefVal.style.transition = 'all .6s cubic-bezier(0.45, 0, 0.55, 1)';
     cdWrapperRefVal.style.transform = `translate3d(${x}px,${y}px,0) scale(${scale})`;
 
     cdWrapperRefVal.addEventListener('transitionend', next);
@@ -48,6 +58,7 @@ export function useAnimate() {
     }
   }
   function afterLeave() {
+    leaving = false;
     const cdWrapperRefVal = cdWrapperRef.value;
     cdWrapperRefVal.style.transition = '';
     cdWrapperRefVal.style.transform = '';

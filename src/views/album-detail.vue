@@ -1,5 +1,5 @@
 <template>
-  <div class="singer-detail">
+  <div class="album-detail">
     <music-list
       :pic="pic"
       :title="title"
@@ -11,23 +11,19 @@
 
 <script>
 import createDetailLikeComponent from '@/assets/js/create-detail-like-component';
-import { getSingerDetail } from '../service/singer';
-import { SINGER_KEY } from '@/assets/js/constants';
-export default createDetailLikeComponent(
-  'singer-detail',
-  SINGER_KEY,
-  getSingerDetail
-);
+import { getAlbum } from '@/service/recommend';
+import { ALBUM_KEY } from '@/assets/js/constants';
+export default createDetailLikeComponent('singer-detail', ALBUM_KEY, getAlbum);
 </script>
 
 <style lang="scss" scoped>
-.singer-detail {
+.album-detail {
   position: fixed;
-  z-index: 10;
   top: 0;
   left: 0;
-  bottom: 0;
   right: 0;
+  bottom: 0;
+  z-index: 10;
   background: $color-background;
 }
 </style>

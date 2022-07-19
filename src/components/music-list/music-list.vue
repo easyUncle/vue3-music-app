@@ -22,7 +22,11 @@
       @scroll="scrollEvent"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs" @selectSong="selectSong"></song-list>
+        <song-list
+          :songs="songs"
+          @selectSong="selectSong"
+          :rank="rank"
+        ></song-list>
       </div>
     </scroll>
   </div>
@@ -30,8 +34,8 @@
 
 <script>
 import SongList from '../base/song-list/song-list.vue';
-import Scroll from '../base/scroll/scroll.vue';
-import { mapActions } from 'vuex';
+import Scroll from '@/components/scroll-wrap';
+import { mapActions, mapState } from 'vuex';
 const TITLE_HEIGHT = 40;
 export default {
   name: 'music-list',
@@ -46,7 +50,11 @@ export default {
     pic: {
       type: String
     },
-    loading: Boolean
+    loading: Boolean,
+    rank: {
+      type: Boolean,
+      default: false
+    }
   },
   data() {
     return {
@@ -104,13 +112,16 @@ export default {
       };
     },
     scrollStyle() {
+      const bottom = this.playList.length ? '60px' : 0;
       return {
-        top: `${this.bgImageHeight}px`
+        top: `${this.bgImageHeight}px`,
+        bottom
       };
     },
     noResult() {
       return !this.loading && !this.songs.length;
-    }
+    },
+    ...mapState(['playList'])
   },
   methods: {
     scrollEvent(pos) {

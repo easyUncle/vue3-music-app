@@ -12,3 +12,7 @@ export const PLAY_MODE = {
 export const FAVORITE_KEY = '__favorite__';
 
 export const MODE_KEY = '__mode__';
+
+export const ALBUM_KEY = '__album__';
+
+export const TOP_KEY = '__top__';

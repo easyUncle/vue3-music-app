@@ -6,9 +6,9 @@
       :key="song.id"
       @click="clickItem(song, index)"
     >
-      <!-- <div class="rank">
-        <span ></span>
-      </div> -->
+      <div class="rank" v-show="rank">
+        <span class="icon" :class="rankCls(index)">{{ getNumber(index) }}</span>
+      </div>
       <div class="content">
         <h2 class="name">{{ song.name }}</h2>
         <p class="desc">{{ getDesc(song) }}</p>
@@ -25,6 +25,10 @@ export default {
       default: () => {
         return [];
       }
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['selectSong'],
@@ -34,6 +38,12 @@ export default {
     },
     clickItem(song, index) {
       this.$emit('selectSong', { song, index });
+    },
+    rankCls(index) {
+      return index < 3 ? 'icon' + index : 'text';
+    },
+    getNumber(index) {
+      return index < 3 ? '' : index + 1;
     }
   }
 };
@@ -58,13 +68,13 @@ export default {
         height: 24px;
         background-size: 25px 24px;
         &.icon0 {
-          // @include bg-image('first');s
+          @include bg-image('first');
         }
         &.icon1 {
-          // @include bg-image('second');
+          @include bg-image('second');
         }
         &.icon2 {
-          // @include bg-image('third');
+          @include bg-image('third');
         }
       }
       .text {

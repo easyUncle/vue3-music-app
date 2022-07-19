@@ -15,6 +15,7 @@
             class="recommend-content-item"
             v-for="album in albums"
             :key="album.id"
+            @click="clickAlbum(album)"
           >
             <div class="icon"><img v-lazy="album.pic" alt="" /></div>
             <div class="text">
@@ -25,6 +26,11 @@
         </div>
       </div>
     </scroll>
+    <router-view v-slot="{ Component }">
+      <transition name="slide" appear>
+        <component :is="Component" :data="selectedAlbum" />
+      </transition>
+    </router-view>
   </div>
 </template>
 
@@ -32,6 +38,9 @@
 import Slider from '../components/base/slider/slider.vue';
 import { getRecommend } from '@/service/recommend';
 import Scroll from '../components/base/scroll/scroll.vue';
+import storage from 'good-storage';
+import { ALBUM_KEY } from '@/assets/js/constants';
+
 export default {
   components: {
     Slider,
@@ -41,12 +50,25 @@ export default {
     return {
       sliders: [],
       albums: [],
-      title: 'loading...'
+      title: 'loading...',
+      selectedAlbum: null
     };
   },
   computed: {
     loading() {
       return !this.sliders.length && !this.albums.length;
+    }
+  },
+  methods: {
+    clickAlbum(album) {
+      this.selectedAlbum = album;
+      this.cacheAlbum(album);
+      this.$router.push({
+        path: `/recommend/${album.id}`
+      });
+    },
+    cacheAlbum(album) {
+      storage.set(ALBUM_KEY, album);
     }
   },
   async created() {

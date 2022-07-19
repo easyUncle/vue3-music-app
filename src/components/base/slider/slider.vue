@@ -72,6 +72,7 @@ export default {
     left: 50%;
     bottom: 12px;
     transform: translateX(-50%);
+    white-space: nowrap;
 
     .dots {
       display: inline-block;
