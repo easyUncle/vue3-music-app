@@ -13,7 +13,8 @@ export default function usePullUp(fetch, preventPullUpLoad) {
   onMounted(() => {
     const scrollValue = (scroll.value = new BScroll(scrollRef.value, {
       pullUpLoad: true,
-      observeDOM: true
+      observeDOM: true,
+      click: true
     }));
 
     scrollValue.on('pullingUp', pullingUpHandler);

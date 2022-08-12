@@ -6,7 +6,7 @@
     ref="scrollRef"
   >
     <ul class="suggest-list">
-      <li class="suggest-item" v-if="singer">
+      <li class="suggest-item" v-if="singer" @click="selectSinger(singer)">
         <div class="icon">
           <i class="icon-mine"></i>
         </div>
@@ -14,7 +14,12 @@
           <p class="text">{{ singer.name }}</p>
         </div>
       </li>
-      <li class="suggest-item" v-for="song in songs" :key="song.id">
+      <li
+        class="suggest-item"
+        v-for="song in songs"
+        :key="song.id"
+        @click="selectSong(song)"
+      >
         <div class="icon">
           <i class="icon-music"></i>
         </div>
@@ -42,7 +47,8 @@ export default {
       default: true
     }
   },
-  setup(props) {
+  emits: ['select-song', 'select-singer'],
+  setup(props, { emit }) {
     const singer = ref(null);
     const songs = ref([]);
     const page = ref(1);
@@ -62,7 +68,6 @@ export default {
     const preventPullUpLoad = computed(
       () => loading.value || autoLoadingMore.value
     );
-
     //watch
     watch(
       () => props.query,
@@ -109,6 +114,13 @@ export default {
         autoLoadingMore.value = false;
       }
     }
+    function selectSong(song) {
+      console.log(song);
+      emit('select-song', song);
+    }
+    function selectSinger(singer) {
+      emit('select-singer', singer);
+    }
     return {
       singer,
       songs,
@@ -117,7 +129,9 @@ export default {
       noResultText,
       noResult,
       scrollRef,
-      isPullUpLoad
+      isPullUpLoad,
+      selectSong,
+      selectSinger
     };
   }
 };
