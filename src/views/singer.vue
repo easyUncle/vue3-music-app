@@ -48,7 +48,7 @@ export default {
 <style lang="scss" scoped>
 .singer {
   position: fixed;
-  top: 80px;
+  top: 88px;
   bottom: 0;
   overflow: hidden;
   width: 100%;
