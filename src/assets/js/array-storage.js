@@ -24,3 +24,16 @@ export function remove(key, compare) {
   storage.set(key, storageArr);
   return storageArr;
 }
+
+export function clear(key) {
+  storage.remove(key);
+  return [];
+}
+
+export function saveAll(items, key) {
+  storage.set(key, items);
+}
+
+export function load(key) {
+  return storage.get(key, []);
+}

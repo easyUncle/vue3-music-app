@@ -35,6 +35,10 @@ const mutations = {
       }
       return item;
     });
+  },
+  //添加搜索历史
+  addSearchHistory(state, list) {
+    state.historySeach = list;
   }
 };
 

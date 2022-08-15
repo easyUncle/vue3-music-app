@@ -4,7 +4,7 @@
       <search-input v-model="query"></search-input>
     </div>
     <div class="content" v-show="!query">
-      <div class="search-hot">
+      <div class="search-hot" v-show="hotKeys.length">
         <h3 class="title">热门搜索</h3>
         <ul>
           <li
@@ -17,13 +17,18 @@
           </li>
         </ul>
       </div>
-      <div class="search-history">
+      <div class="search-history" v-show="searches.length">
         <h1 class="title">
           <span class="text">搜索历史</span>
-          <span class="clear">
+          <span class="clear" @click="showConfirm">
             <i class="icon-clear"></i>
           </span>
         </h1>
+        <search-list
+          :searches="searches"
+          @delete-item="deleteItem"
+          @select-item="selectItem"
+        ></search-list>
       </div>
     </div>
     <div class="search-result" v-show="query">
@@ -44,18 +49,21 @@
 <script>
 import SearchInput from '@/components/search/search-input';
 import { getHotKeys } from '@/service/search';
-import { watch, ref } from 'vue';
+import { watch, ref, computed } from 'vue';
 import Suggest from '@/components/search/suggest';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { SINGER_KEY } from '@/assets/js/constants';
 import storage from 'good-storage';
+import SearchList from '@/components/base/search-list/search-list';
+import { useSearchHistory } from '@/components/search/use-search-history';
 
 export default {
   name: 'search',
   components: {
     SearchInput,
-    Suggest
+    Suggest,
+    SearchList
   },
   setup() {
     const query = ref('');
@@ -65,17 +73,25 @@ export default {
     const router = useRouter();
 
     getHotKeys().then(res => {
-      hotKeys.value = res && res.hotkey;
+      hotKeys.value = (res && res.hotkey) || [];
     });
     watch(query, newVal => {
       console.log(newVal);
     });
 
+    //computed
+    const searches = computed(() => store.state.historySeach);
+
+    //hooks
+    const { saveSearchHistory, deleteSearchHistory } = useSearchHistory();
+
     //methods
     function selectSong(song) {
+      saveSearchHistory(query.value);
       store.dispatch('addSong', song);
     }
     function selectSinger(singer) {
+      saveSearchHistory(query.value);
       selectedSinger.value = singer;
       cacheSinger();
       router.push({ path: `/singer/${singer.mid}` });
@@ -83,12 +99,21 @@ export default {
     function cacheSinger() {
       storage.set(SINGER_KEY, selectedSinger.value);
     }
+    function deleteItem(query) {
+      deleteSearchHistory(query);
+    }
+    function selectItem(item) {
+      query.value = item;
+    }
     return {
       query,
       hotKeys,
       selectSong,
       selectSinger,
-      selectedSinger
+      selectedSinger,
+      searches,
+      deleteItem,
+      selectItem
     };
   }
 };

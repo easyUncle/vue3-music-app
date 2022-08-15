@@ -16,3 +16,5 @@ export const MODE_KEY = '__mode__';
 export const ALBUM_KEY = '__album__';
 
 export const TOP_KEY = '__top__';
+
+export const SEARCH_KEY = '__search__';
