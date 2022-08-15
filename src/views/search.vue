@@ -24,6 +24,13 @@
             <i class="icon-clear"></i>
           </span>
         </h1>
+        <confirm
+          :text="confirmText"
+          @confirm="confirm"
+          @cancel="cancel"
+          v-model="visible"
+        >
+        </confirm>
         <search-list
           :searches="searches"
           @delete-item="deleteItem"
@@ -57,13 +64,15 @@ import { SINGER_KEY } from '@/assets/js/constants';
 import storage from 'good-storage';
 import SearchList from '@/components/base/search-list/search-list';
 import { useSearchHistory } from '@/components/search/use-search-history';
+import Confirm from '@/components/base/confirm/confirm';
 
 export default {
   name: 'search',
   components: {
     SearchInput,
     Suggest,
-    SearchList
+    SearchList,
+    Confirm
   },
   setup() {
     const query = ref('');
@@ -71,6 +80,8 @@ export default {
     const store = useStore();
     const selectedSinger = ref(null);
     const router = useRouter();
+    const confirmText = ref('是否清空所有搜索历史');
+    const visible = ref(false);
 
     getHotKeys().then(res => {
       hotKeys.value = (res && res.hotkey) || [];
@@ -80,10 +91,11 @@ export default {
     });
 
     //computed
-    const searches = computed(() => store.state.historySeach);
+    const searches = computed(() => store.state.historySeach || []);
 
     //hooks
-    const { saveSearchHistory, deleteSearchHistory } = useSearchHistory();
+    const { saveSearchHistory, deleteSearchHistory, clearSearchHistory } =
+      useSearchHistory();
 
     //methods
     function selectSong(song) {
@@ -105,6 +117,13 @@ export default {
     function selectItem(item) {
       query.value = item;
     }
+    function confirm() {
+      clearSearchHistory();
+    }
+    function cancel() {}
+    function showConfirm() {
+      visible.value = true;
+    }
     return {
       query,
       hotKeys,
@@ -113,7 +132,12 @@ export default {
       selectedSinger,
       searches,
       deleteItem,
-      selectItem
+      selectItem,
+      confirmText,
+      confirm,
+      cancel,
+      showConfirm,
+      visible
     };
   }
 };
