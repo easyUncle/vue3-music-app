@@ -39,6 +39,9 @@ const mutations = {
   //添加搜索历史
   addSearchHistory(state, list) {
     state.historySeach = list;
+  },
+  setPlayHistory(state, songs) {
+    state.playHistory = songs;
   }
 };
 

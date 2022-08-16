@@ -11,7 +11,15 @@
         <search-input v-model="query"></search-input>
       </div>
       <div>
-        <switches :switches="['最近播放', '搜索历史']"></switches>
+        <switches
+          :items="['最近播放', '搜索历史']"
+          v-model="currentIndex"
+        ></switches>
+      </div>
+      <div class="list-wrapper">
+        <scroll class="list-scroll" v-if="currentIndex === 0">
+          <song-list :songs="playHistory"></song-list>
+        </scroll>
       </div>
     </div>
   </teleport>
@@ -19,17 +27,26 @@
 
 <script>
 import SearchInput from '@/components/search/search-input';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import Switches from '@/components/base/switches/switches.vue';
+import Scroll from '@/components/base/scroll/scroll';
+import SongList from '@/components/base/song-list/song-list';
+import { useStore } from 'vuex';
 export default {
   name: 'add-song',
   components: {
     SearchInput,
-    Switches
+    Switches,
+    Scroll,
+    SongList
   },
   setup() {
     const query = ref('');
     const visible = ref(false);
+    const currentIndex = ref(0);
+    const store = useStore();
+    //vuex
+    const playHistory = computed(() => store.state.playHistory);
     //methods
     function show() {
       visible.value = true;
@@ -41,7 +58,9 @@ export default {
       query,
       visible,
       show,
-      hide
+      hide,
+      currentIndex,
+      playHistory
     };
   }
 };
@@ -55,24 +74,25 @@ export default {
   width: 100%;
   z-index: 300;
   background: $color-background;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 
   .header {
     width: 100%;
     position: relative;
-    height: 44px;
     text-align: center;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
     font-size: $font-size-large;
 
     .title {
+      height: 44px;
+      line-height: 44px;
       color: $color-text;
     }
 
     .close {
       position: absolute;
+      top: 0;
       right: 8px;
       color: $color-theme;
       padding: 12px;
@@ -81,6 +101,18 @@ export default {
 
   .search-input-wrapper {
     margin: 20px;
+  }
+
+  .list-wrapper {
+    flex: 1;
+    overflow: hidden;
+
+    padding: 20px;
+
+    .list-scroll {
+      height: 100%;
+      overflow: hidden;
+    }
   }
 }
 </style>

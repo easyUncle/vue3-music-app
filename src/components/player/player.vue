@@ -130,6 +130,7 @@ import Scroll from '@/components/base/scroll/scroll';
 import { useMiddleInterative } from './use-middle-interative';
 import MiniPlayer from './mini-player.vue';
 import { useAnimate } from './useAnimate';
+import { useHistory } from './use-history';
 
 export default {
   name: 'player',
@@ -178,6 +179,8 @@ export default {
     } = useMiddleInterative();
 
     const { enter, afterEnter, leave, afterLeave, cdWrapperRef } = useAnimate();
+
+    const { savePlayHistory } = useHistory();
     //播放状态派生播放按钮
     const playIcon = computed(() =>
       playing.value ? 'icon-pause' : 'icon-play'
@@ -267,6 +270,7 @@ export default {
       if (songReady.value) return;
       songReady.value = true;
       playLyric();
+      savePlayHistory(currentSong.value);
     }
     function error() {
       songReady.value = true;

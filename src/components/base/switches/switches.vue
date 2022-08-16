@@ -2,9 +2,9 @@
   <ul class="switches">
     <li
       class="switch-item"
-      v-for="(item, index) in switches"
+      v-for="(item, index) in items"
       :key="index"
-      :class="{ activeSwitch: currentIndex == index }"
+      :class="{ activeSwitch: modelValue == index }"
       @click="switchitem(index)"
     >
       {{ item }}
@@ -17,21 +17,26 @@
 export default {
   name: 'switches',
   props: {
-    switches: {
+    items: {
       type: Array,
       default: () => {
         return [];
       }
+    },
+    modelValue: {
+      type: Number,
+      default: 0
     }
   },
+  emits: ['update:modelValue'],
   data() {
     return {
-      currentIndex: 0
+      //   currentIndex: 0
     };
   },
   computed: {
     barStyle() {
-      const x = 120 * this.currentIndex;
+      const x = 120 * this.modelValue;
       return {
         transform: `translate3d(${x}px,0,0)`,
         transition: 'all 0.3s'
@@ -40,7 +45,7 @@ export default {
   },
   methods: {
     switchitem(index) {
-      this.currentIndex = index;
+      this.$emit('update:modelValue', index);
     }
   }
 };

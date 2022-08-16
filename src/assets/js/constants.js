@@ -18,3 +18,5 @@ export const ALBUM_KEY = '__album__';
 export const TOP_KEY = '__top__';
 
 export const SEARCH_KEY = '__search__';
+
+export const HISTORY_KEY = '__history__';
