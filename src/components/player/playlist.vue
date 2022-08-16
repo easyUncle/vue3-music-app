@@ -34,10 +34,11 @@
           </ul>
         </scroll>
         <div class="list-add">
-          <div class="add">
+          <div class="add" @click="showAddSong">
             <i class="icon icon-add"></i>
             <span class="text">添加歌曲到队列</span>
           </div>
+          <add-song ref="addsongRef"></add-song>
         </div>
         <div class="list-footer">关闭</div>
       </div>
@@ -51,10 +52,12 @@ import { computed, ref, nextTick } from 'vue';
 import Scroll from '../base/scroll/scroll.vue';
 import { useMode } from './use-mode';
 import { useFavorite } from './use-favorite';
+import AddSong from '@/components/add-song/add-song';
 export default {
   name: 'playlist',
   components: {
-    Scroll
+    Scroll,
+    AddSong
   },
   setup() {
     const listRef = ref(null);
@@ -68,6 +71,7 @@ export default {
     //data
     const visible = ref(false);
     const moving = ref(false);
+    const addsongRef = ref(null);
 
     //hook
     const { modeIcon, changeMode, modeText } = useMode();
@@ -117,6 +121,9 @@ export default {
       );
       store.commit('setCurrentIndex', currentIndex);
     }
+    function showAddSong() {
+      addsongRef.value.show();
+    }
     return {
       listRef,
       show,
@@ -135,7 +142,9 @@ export default {
       favoriteICon,
       deleteItem,
       selectItem,
-      moving
+      moving,
+      addsongRef,
+      showAddSong
     };
   }
 };
@@ -150,6 +159,7 @@ export default {
   right: 0;
   background: $color-background-d;
   z-index: 200;
+
   .list-wrapper {
     position: fixed;
     left: 0;
@@ -158,61 +168,74 @@ export default {
     width: 100%;
     z-index: 210;
     background: $color-highlight-background;
+
     .list-header {
       padding: 0 30px 0 20px;
       height: 54px;
       display: flex;
       align-items: center;
+
       .icon {
         color: $color-theme;
         font-size: $font-size-large-x;
       }
+
       .text {
         flex: 1;
         font-size: $font-size-medium;
         color: $color-text-l;
         margin-left: 10px;
       }
+
       .cleaar {
         font-size: $font-size-medium;
         color: $color-text-l;
       }
     }
+
     .list-content {
       padding: 0 30px 0 20px;
       max-height: 240px;
       overflow: hidden;
+
       &-item {
         display: flex;
         height: 40px;
         align-items: center;
         overflow: hidden;
+
         .current {
           width: 20px;
           color: $color-theme;
           font-size: $font-size-small;
         }
+
         .text {
           font-size: $font-size-medium;
           flex: 1;
           color: $color-text-l;
         }
+
         .favorite,
         .delete {
           font-size: $font-size-small;
           color: $color-theme;
+
           .icon-favorite {
             color: $color-sub-theme;
           }
         }
+
         .favorite {
           margin-right: 10px;
         }
       }
     }
+
     .list-add {
       width: 140px;
       margin: 20px auto 30px auto;
+
       .add {
         display: flex;
         justify-content: center;
@@ -222,11 +245,13 @@ export default {
         border-radius: 100px;
         font-size: $font-size-small;
         color: $color-text-ll;
+
         .icon {
           margin-right: 10px;
         }
       }
     }
+
     .list-footer {
       height: 50px;
       background: $color-background;
@@ -236,6 +261,7 @@ export default {
       color: $color-text-ll;
       width: 100%;
     }
+
     .disable {
       color: $color-theme-d;
     }
