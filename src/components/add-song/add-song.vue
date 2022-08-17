@@ -10,16 +10,31 @@
       <div class="search-input-wrapper">
         <search-input v-model="query"></search-input>
       </div>
-      <div>
-        <switches
-          :items="['最近播放', '搜索历史']"
-          v-model="currentIndex"
-        ></switches>
+      <div class="content" v-show="!query">
+        <div>
+          <switches
+            :items="['最近播放', '搜索历史']"
+            v-model="currentIndex"
+          ></switches>
+        </div>
+        <div class="list-wrapper">
+          <scroll class="list-scroll" v-if="currentIndex === 0">
+            <song-list :songs="playHistory"></song-list>
+          </scroll>
+          <scroll class="list-scroll" v-if="currentIndex === 1">
+            <search-list
+              :searches="searchHistory"
+              :showDelete="false"
+            ></search-list>
+          </scroll>
+        </div>
       </div>
-      <div class="list-wrapper">
-        <scroll class="list-scroll" v-if="currentIndex === 0">
-          <song-list :songs="playHistory"></song-list>
-        </scroll>
+      <div class="suggest-result" v-show="query">
+        <suggest
+          :query="query"
+          @select-song="selectSong"
+          @select-singer="selectSinger"
+        ></suggest>
       </div>
     </div>
   </teleport>
@@ -32,13 +47,17 @@ import Switches from '@/components/base/switches/switches.vue';
 import Scroll from '@/components/base/scroll/scroll';
 import SongList from '@/components/base/song-list/song-list';
 import { useStore } from 'vuex';
+import SearchList from '@/components/base/search-list/search-list.vue';
+import Suggest from '@/components/search/suggest.vue';
 export default {
   name: 'add-song',
   components: {
     SearchInput,
     Switches,
     Scroll,
-    SongList
+    SongList,
+    SearchList,
+    Suggest
   },
   setup() {
     const query = ref('');
@@ -47,6 +66,7 @@ export default {
     const store = useStore();
     //vuex
     const playHistory = computed(() => store.state.playHistory);
+    const searchHistory = computed(() => store.state.historySeach);
     //methods
     function show() {
       visible.value = true;
@@ -54,13 +74,18 @@ export default {
     function hide() {
       visible.value = false;
     }
+    function selectSong() {}
+    function selectSinger() {}
     return {
       query,
       visible,
       show,
       hide,
       currentIndex,
-      playHistory
+      playHistory,
+      searchHistory,
+      selectSong,
+      selectSinger
     };
   }
 };
@@ -103,16 +128,28 @@ export default {
     margin: 20px;
   }
 
-  .list-wrapper {
+  .content {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
 
-    padding: 20px;
-
-    .list-scroll {
-      height: 100%;
+    .list-wrapper {
+      flex: 1;
       overflow: hidden;
+
+      padding: 20px;
+
+      .list-scroll {
+        height: 100%;
+        overflow: hidden;
+      }
     }
+  }
+  .suggest-result {
+    flex: 1;
+    overflow: hidden;
+    padding: 0 20px;
   }
 }
 </style>
