@@ -77,6 +77,7 @@ export default {
 
   .top-scroll {
     height: 100%;
+    //修复排行榜页面跳转排行榜详情页面时，排行页面没有隐藏问题
     overflow: hidden;
     .topList {
       &-item {
