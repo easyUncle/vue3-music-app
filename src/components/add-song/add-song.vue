@@ -19,12 +19,16 @@
         </div>
         <div class="list-wrapper">
           <scroll class="list-scroll" v-if="currentIndex === 0" ref="scrollRef">
-            <song-list :songs="playHistory"></song-list>
+            <song-list
+              :songs="playHistory"
+              @selectSong="selectByHistory"
+            ></song-list>
           </scroll>
           <scroll class="list-scroll" v-if="currentIndex === 1" ref="scrollRef">
             <search-list
               :searches="searchHistory"
               :showDelete="false"
+              @select-item="selectBySearchList"
             ></search-list>
           </scroll>
         </div>
@@ -32,8 +36,8 @@
       <div class="suggest-result" v-show="query">
         <suggest
           :query="query"
-          @select-song="selectSong"
-          @select-singer="selectSinger"
+          :showSinger="false"
+          @select-song="selectBySuggest"
         ></suggest>
       </div>
     </div>
@@ -81,8 +85,18 @@ export default {
       await nextTick();
       scrollRef.value.scroll.refresh();
     }
-    function selectSong() {}
-    function selectSinger() {}
+    function selectBySearchList(item) {
+      query.value = item;
+    }
+    function selectBySuggest(song) {
+      addSong(song);
+    }
+    function selectByHistory({ song }) {
+      addSong(song);
+    }
+    function addSong(song) {
+      store.dispatch('addSong', song);
+    }
     return {
       query,
       visible,
@@ -91,9 +105,10 @@ export default {
       currentIndex,
       playHistory,
       searchHistory,
-      selectSong,
-      selectSinger,
-      scrollRef
+      scrollRef,
+      selectBySearchList,
+      selectByHistory,
+      selectBySuggest
     };
   }
 };

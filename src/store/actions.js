@@ -46,13 +46,6 @@ export function removeSong({ commit, state }, song) {
 
   sequenceList.splice(sequenceIndex, 1);
   playList.splice(playIndex, 1);
-  console.log(
-    currentIndex,
-    sequenceIndex,
-    playIndex,
-    sequenceList.length,
-    playList.length
-  );
   if (currentIndex === playList.length || currentIndex > playIndex) {
     currentIndex--;
   }

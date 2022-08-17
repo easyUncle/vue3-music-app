@@ -193,6 +193,7 @@ export default {
     );
     //监听当前歌曲,全换播放url和播放状态
     watch(currentSong, newSong => {
+      console.log(newSong.url);
       const audioVal = audioRef.value;
       songReady.value = false;
       audioVal.src = newSong.url;
