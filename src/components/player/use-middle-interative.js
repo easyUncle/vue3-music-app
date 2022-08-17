@@ -19,7 +19,6 @@ export function useMiddleInterative() {
 
     const absDetalX = Math.abs(detalX);
     const absDetalY = Math.abs(detalY);
-    console.log(absDetalY, absDetalX);
     if (absDetalY >= absDetalX) {
       return false;
     }

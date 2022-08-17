@@ -3,41 +3,43 @@
     <div class="search-input-wrapper">
       <search-input v-model="query"></search-input>
     </div>
-    <div class="content" v-show="!query">
-      <div class="search-hot" v-show="hotKeys.length">
-        <h3 class="title">热门搜索</h3>
-        <ul>
-          <li
-            class="item"
-            v-for="item in hotKeys"
-            :key="item.id"
-            @click="addQuery(item.key)"
+    <scroll class="scroll-wrap" v-show="!query">
+      <div class="content">
+        <div class="search-hot" v-show="hotKeys.length">
+          <h3 class="title">热门搜索</h3>
+          <ul>
+            <li
+              class="item"
+              v-for="item in hotKeys"
+              :key="item.id"
+              @click="addQuery(item.key)"
+            >
+              <span>{{ item.key }}</span>
+            </li>
+          </ul>
+        </div>
+        <div class="search-history" v-show="searches.length">
+          <h1 class="title">
+            <span class="text">搜索历史</span>
+            <span class="clear" @click="showConfirm">
+              <i class="icon-clear"></i>
+            </span>
+          </h1>
+          <confirm
+            :text="confirmText"
+            @confirm="confirm"
+            @cancel="cancel"
+            v-model="visible"
           >
-            <span>{{ item.key }}</span>
-          </li>
-        </ul>
+          </confirm>
+          <search-list
+            :searches="searches"
+            @delete-item="deleteItem"
+            @select-item="selectItem"
+          ></search-list>
+        </div>
       </div>
-      <div class="search-history" v-show="searches.length">
-        <h1 class="title">
-          <span class="text">搜索历史</span>
-          <span class="clear" @click="showConfirm">
-            <i class="icon-clear"></i>
-          </span>
-        </h1>
-        <confirm
-          :text="confirmText"
-          @confirm="confirm"
-          @cancel="cancel"
-          v-model="visible"
-        >
-        </confirm>
-        <search-list
-          :searches="searches"
-          @delete-item="deleteItem"
-          @select-item="selectItem"
-        ></search-list>
-      </div>
-    </div>
+    </scroll>
     <div class="search-result" v-show="query">
       <suggest
         :query="query"
@@ -65,6 +67,7 @@ import storage from 'good-storage';
 import SearchList from '@/components/base/search-list/search-list';
 import { useSearchHistory } from '@/components/search/use-search-history';
 import Confirm from '@/components/base/confirm/confirm';
+import Scroll from '@/components/base/scroll/scroll';
 
 export default {
   name: 'search',
@@ -72,7 +75,8 @@ export default {
     SearchInput,
     Suggest,
     SearchList,
-    Confirm
+    Confirm,
+    Scroll
   },
   setup() {
     const query = ref('');
@@ -157,40 +161,40 @@ export default {
     margin: 20px;
   }
 
-  .content {
+  .scroll-wrap {
     flex: 1;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
+    overflow: hidden;
+    .content {
+      padding: 0 20px;
+      .search-hot {
+        .title {
+          font-size: $font-size-medium;
+          color: $color-text-l;
+          margin-bottom: 20px;
+        }
 
-    .search-hot {
-      .title {
-        font-size: $font-size-medium;
-        color: $color-text-l;
-        margin-bottom: 20px;
+        .item {
+          display: inline-block;
+          padding: 5px 10px;
+          margin: 0 20px 10px 0;
+          border-radius: 6px;
+          background: $color-highlight-background;
+          font-size: $font-size-medium;
+          color: $color-text-d;
+        }
       }
 
-      .item {
-        display: inline-block;
-        padding: 5px 10px;
-        margin: 0 20px 10px 0;
-        border-radius: 6px;
-        background: $color-highlight-background;
-        font-size: $font-size-medium;
-        color: $color-text-d;
-      }
-    }
+      .search-history {
+        .title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: 40px;
+          font-size: 14px;
+          color: rgba(255, 255, 255, 0.5);
 
-    .search-history {
-      .title {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 40px;
-        font-size: 14px;
-        color: rgba(255, 255, 255, 0.5);
-
-        .text {
+          .text {
+          }
         }
       }
     }
