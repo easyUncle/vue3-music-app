@@ -18,10 +18,10 @@
           ></switches>
         </div>
         <div class="list-wrapper">
-          <scroll class="list-scroll" v-if="currentIndex === 0">
+          <scroll class="list-scroll" v-if="currentIndex === 0" ref="scrollRef">
             <song-list :songs="playHistory"></song-list>
           </scroll>
-          <scroll class="list-scroll" v-if="currentIndex === 1">
+          <scroll class="list-scroll" v-if="currentIndex === 1" ref="scrollRef">
             <search-list
               :searches="searchHistory"
               :showDelete="false"
@@ -49,6 +49,7 @@ import SongList from '@/components/base/song-list/song-list';
 import { useStore } from 'vuex';
 import SearchList from '@/components/base/search-list/search-list.vue';
 import Suggest from '@/components/search/suggest.vue';
+import { nextTick } from 'process';
 export default {
   name: 'add-song',
   components: {
@@ -64,15 +65,21 @@ export default {
     const visible = ref(false);
     const currentIndex = ref(0);
     const store = useStore();
+    const scrollRef = ref(null);
     //vuex
     const playHistory = computed(() => store.state.playHistory);
     const searchHistory = computed(() => store.state.historySeach);
     //methods
     function show() {
       visible.value = true;
+      scrollRefresh();
     }
     function hide() {
       visible.value = false;
+    }
+    async function scrollRefresh() {
+      await nextTick();
+      scrollRef.value.scroll.refresh();
     }
     function selectSong() {}
     function selectSinger() {}
@@ -85,7 +92,8 @@ export default {
       playHistory,
       searchHistory,
       selectSong,
-      selectSinger
+      selectSinger,
+      scrollRef
     };
   }
 };
