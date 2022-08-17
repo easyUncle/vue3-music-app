@@ -40,7 +40,7 @@
           </div>
           <add-song ref="addsongRef"></add-song>
         </div>
-        <div class="list-footer">关闭</div>
+        <div class="list-footer" @click="hide">关闭</div>
       </div>
     </div>
   </teleport>

@@ -29,7 +29,8 @@
               :searches="searchHistory"
               :showDelete="false"
               @select-item="selectBySearchList"
-            ></search-list>
+            >
+            </search-list>
           </scroll>
         </div>
       </div>
@@ -40,6 +41,12 @@
           @select-song="selectBySuggest"
         ></suggest>
       </div>
+      <message ref="messageRef">
+        <div class="message-title">
+          <i class="icon-ok"></i>
+          <span class="text">1首歌曲已经添加到播放列表</span>
+        </div>
+      </message>
     </div>
   </teleport>
 </template>
@@ -54,6 +61,7 @@ import { useStore } from 'vuex';
 import SearchList from '@/components/base/search-list/search-list.vue';
 import Suggest from '@/components/search/suggest.vue';
 import { nextTick } from 'process';
+import Message from '@/components/base/message/message.vue';
 export default {
   name: 'add-song',
   components: {
@@ -62,7 +70,8 @@ export default {
     Scroll,
     SongList,
     SearchList,
-    Suggest
+    Suggest,
+    Message
   },
   setup() {
     const query = ref('');
@@ -70,6 +79,7 @@ export default {
     const currentIndex = ref(0);
     const store = useStore();
     const scrollRef = ref(null);
+    const messageRef = ref(null);
     //vuex
     const playHistory = computed(() => store.state.playHistory);
     const searchHistory = computed(() => store.state.historySeach);
@@ -94,13 +104,18 @@ export default {
       query.value = item;
     }
     function selectBySuggest(song) {
+      showMessage();
       addSong(song);
     }
     function selectByHistory({ song }) {
+      showMessage();
       addSong(song);
     }
     function addSong(song) {
       store.dispatch('addSong', song);
+    }
+    function showMessage() {
+      messageRef.value.show();
     }
     return {
       query,
@@ -113,7 +128,8 @@ export default {
       scrollRef,
       selectBySearchList,
       selectByHistory,
-      selectBySuggest
+      selectBySuggest,
+      messageRef
     };
   }
 };
@@ -174,10 +190,28 @@ export default {
       }
     }
   }
+
   .suggest-result {
     flex: 1;
     overflow: hidden;
     padding: 0 20px;
+  }
+}
+
+.message-title {
+  text-align: center;
+  padding: 18px 0;
+  font-size: 0;
+
+  .icon-ok {
+    font-size: $font-size-medium;
+    color: $color-theme;
+    margin-right: 4px;
+  }
+
+  .text {
+    font-size: $font-size-medium;
+    color: $color-text;
   }
 }
 </style>
