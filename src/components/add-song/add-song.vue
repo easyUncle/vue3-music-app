@@ -46,7 +46,7 @@
 
 <script>
 import SearchInput from '@/components/search/search-input';
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import Switches from '@/components/base/switches/switches.vue';
 import Scroll from '@/components/base/scroll/scroll';
 import SongList from '@/components/base/song-list/song-list';
@@ -73,6 +73,11 @@ export default {
     //vuex
     const playHistory = computed(() => store.state.playHistory);
     const searchHistory = computed(() => store.state.historySeach);
+
+    //watch
+    watch(query, () => {
+      scrollRefresh();
+    });
     //methods
     function show() {
       visible.value = true;
