@@ -73,6 +73,7 @@ export default {
   .activeSwitch {
     color: $color-text;
   }
+
   .active-bar {
     background: $color-highlight-background;
     height: 30px;
