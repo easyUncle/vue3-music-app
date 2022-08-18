@@ -20,7 +20,6 @@ export function initScroll(rootRef, options, emit) {
   });
 
   onActivated(() => {
-    alert('scroll');
     scroll.value.enable();
     scroll.value.refresh();
   });

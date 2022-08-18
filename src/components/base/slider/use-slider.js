@@ -39,6 +39,4 @@ export function useSlideInit(rootRef) {
   };
 }
 
-export function handler() {
-  alert(1);
-}
+export function handler() {}
